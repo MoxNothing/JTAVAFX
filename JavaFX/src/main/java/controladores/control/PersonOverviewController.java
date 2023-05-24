@@ -2,6 +2,7 @@ package controladores.control;
 
 import javafx.scene.control.Alert;
 import modelo.Person;
+import controladores.control.MainApp;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -43,12 +44,7 @@ public class PersonOverviewController {
     public PersonOverviewController() {
 
     }
-    @FXML
-    private void initialize() {
-        // Initialize the person table with the two columns.
-        NombresS.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
-        ApellidosS.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
-    }
+
 
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
@@ -93,11 +89,6 @@ public class PersonOverviewController {
         personTable.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> showPersonDetails(newValue));
     }
-    @FXML
-    private void handleDeletePerson() {
-        int selectedIndex = personTable.getSelectionModel().getSelectedIndex();
-        personTable.getItems().remove(selectedIndex);
-    }
 
     @FXML
     private void handleDeletePerson() {
@@ -113,6 +104,14 @@ public class PersonOverviewController {
             alert.setContentText("Please select a person in the table.");
 
             alert.showAndWait();
+        }
+    }
+    @FXML
+    private void handleNewPerson() {
+        Person tempPerson = new Person();
+        boolean okClicked = mainApp.showPersonEditDialog(tempPerson);
+        if (okClicked) {
+            mainApp.getPersonData().add(tempPerson);
         }
     }
     public void showPersonOverview() {
@@ -132,5 +131,31 @@ public class PersonOverviewController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    @FXML
+    private void handleEditPerson() {
+        Person selectedPerson = personTable.getSelectionModel().getSelectedItem();
+        if (selectedPerson != null) {
+            boolean okClicked = mainApp.showPersonEditDialog(selectedPerson);
+            if (okClicked) {
+                showPersonDetails(selectedPerson);
+            }
+
+        } else {
+            // Nothing selected.
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.initOwner(mainApp.getPrimaryStage());
+            alert.setTitle("No Selection");
+            alert.setHeaderText("No Person Selected");
+            alert.setContentText("Please select a person in the table.");
+
+            alert.showAndWait();
+        }
+    }
+    public void setMainApp(MainApp mainApp) {
+        this.mainApp = mainApp;
+
+        // Add observable list data to the table
+        personTable.setItems(mainApp.getPersonData());
     }
 }

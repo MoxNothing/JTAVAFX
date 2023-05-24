@@ -6,11 +6,14 @@ import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import modelo.Person;
+import java.io.File;
+import java.util.prefs.Preferences;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 
@@ -18,6 +21,24 @@ public class MainApp extends Application {
 
     private Stage primaryStage;
     private BorderPane rootLayout;
+    private ObservableList<Person> personData = FXCollections.observableArrayList();
+
+
+    /**
+     * Constructor
+     */
+    public MainApp() {
+        // Add some sample data
+        personData.add(new Person("Hans", "Muster"));
+        personData.add(new Person("Ruth", "Mueller"));
+        personData.add(new Person("Heinz", "Kurz"));
+        personData.add(new Person("Cornelia", "Meier"));
+        personData.add(new Person("Werner", "Meyer"));
+        personData.add(new Person("Lydia", "Kunz"));
+        personData.add(new Person("Anna", "Best"));
+        personData.add(new Person("Stefan", "Meier"));
+        personData.add(new Person("Martin", "Mueller"));
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -65,11 +86,15 @@ public class MainApp extends Application {
         }
     }
 
-    /**
-     * Returns the main stage.
-     *
-     * @return
-     */
+    public File getPersonFilePath() {
+        Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
+        String filePath = prefs.get("filePath", null);
+        if (filePath != null) {
+            return new File(filePath);
+        } else {
+            return null;
+        }
+    }
     public Stage getPrimaryStage() {
         return primaryStage;
     }
@@ -77,34 +102,6 @@ public class MainApp extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
-    private ObservableList<Person> personData = FXCollections.observableArrayList();
-
-    /**
-     * Constructor
-     */
-    public MainApp() {
-        // Add some sample data
-        personData.add(new Person("Hans", "Muster"));
-        personData.add(new Person("Ruth", "Mueller"));
-        personData.add(new Person("Heinz", "Kurz"));
-        personData.add(new Person("Cornelia", "Meier"));
-        personData.add(new Person("Werner", "Meyer"));
-        personData.add(new Person("Lydia", "Kunz"));
-        personData.add(new Person("Anna", "Best"));
-        personData.add(new Person("Stefan", "Meier"));
-        personData.add(new Person("Martin", "Mueller"));
-    }
-
-    /**
-     * Returns the data as an observable list of Persons.
-     *
-     * @return
-     */
-    public ObservableList<Person> getPersonData() {
-        return personData;
-    }
-
     public boolean showPersonEditDialog(Person person) {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
@@ -134,38 +131,18 @@ public class MainApp extends Application {
             return false;
         }
     }
-    @FXML
-    private void handleNewPerson() {
-        Person tempPerson = new Person();
-        boolean okClicked = showPersonEditDialog(tempPerson);
-        if (okClicked) {
-            getPersonData().add(tempPerson);
-        }
-    }
+    public void setPersonFilePath(File file) {
+        Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
+        if (file != null) {
+            prefs.put("filePath", file.getPath());
 
-    /**
-     * Called when the user clicks the edit button. Opens a dialog to edit
-     * details for the selected person.
-     */
-    @FXML
-    private void handleEditPerson() {
-        Person selectedPerson = personTable.getSelectionModel().getSelectedItem();
-        if (selectedPerson != null) {
-            boolean okClicked = showPersonEditDialog(selectedPerson);
-            if (okClicked) {
-                showPersonDetails(selectedPerson);
-            }
-
+            // Update the stage title.
+            primaryStage.setTitle("AddressApp - " + file.getName());
         } else {
-            // Nothing selected.
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initOwner(mainApp.getPrimaryStage());
-            alert.setTitle("No Selection");
-            alert.setHeaderText("No Person Selected");
-            alert.setContentText("Please select a person in the table.");
+            prefs.remove("filePath");
 
-            alert.showAndWait();
+            // Update the stage title.
+            primaryStage.setTitle("AddressApp");
         }
     }
-
 }

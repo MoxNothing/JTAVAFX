@@ -1,4 +1,5 @@
 package controladores.control;
+
 import utilidad.DateUtil;
 import modelo.Person;
 import javafx.fxml.FXML;
@@ -15,18 +16,17 @@ import javafx.stage.Stage;
 public class PersonEditDialogController {
 
     @FXML
-    private TextField firstNameField;
+    private TextField NombresF;
     @FXML
-    private TextField lastNameField;
+    private TextField ApellidosF;
     @FXML
-    private TextField streetField;
+    private TextField CalleF;
     @FXML
-    private TextField postalCodeField;
+    private TextField CodPostalF;
     @FXML
-    private TextField cityField;
+    private TextField CiudadF;
     @FXML
-    private TextField birthdayField;
-
+    private TextField CumpleF;
 
     private Stage dialogStage;
     private Person person;
@@ -57,13 +57,13 @@ public class PersonEditDialogController {
     public void setPerson(Person person) {
         this.person = person;
 
-        firstNameField.setText(person.getFirstName());
-        lastNameField.setText(person.getLastName());
-        streetField.setText(person.getStreet());
-        postalCodeField.setText(Integer.toString(person.getPostalCode()));
-        cityField.setText(person.getCity());
-        birthdayField.setText(DateUtil.format(person.getBirthday()));
-        birthdayField.setPromptText("dd.mm.yyyy");
+        NombresF.setText(person.getFirstName());
+        ApellidosF.setText(person.getLastName());
+        CalleF.setText(person.getStreet());
+        CodPostalF.setText(Integer.toString(person.getPostalCode()));
+        CiudadF.setText(person.getCity());
+        CumpleF.setText(DateUtil.format(person.getBirthday()));
+        CumpleF.setPromptText("dd.mm.yyyy");
     }
 
     /**
@@ -81,12 +81,12 @@ public class PersonEditDialogController {
     @FXML
     private void handleOk() {
         if (isInputValid()) {
-            person.setFirstName(firstNameField.getText());
-            person.setLastName(lastNameField.getText());
-            person.setStreet(streetField.getText());
-            person.setPostalCode(Integer.parseInt(postalCodeField.getText()));
-            person.setCity(cityField.getText());
-            person.setBirthday(DateUtil.parse(birthdayField.getText()));
+            person.setFirstName(NombresF.getText());
+            person.setLastName(ApellidosF.getText());
+            person.setStreet(CalleF.getText());
+            person.setPostalCode(Integer.parseInt(CodPostalF.getText()));
+            person.setCity(CiudadF.getText());
+            person.setBirthday(DateUtil.parse(CumpleF.getText()));
 
             okClicked = true;
             dialogStage.close();
@@ -109,35 +109,35 @@ public class PersonEditDialogController {
     private boolean isInputValid() {
         String errorMessage = "";
 
-        if (firstNameField.getText() == null || firstNameField.getText().length() == 0) {
+        if (NombresF.getText() == null || NombresF.getText().length() == 0) {
             errorMessage += "No valid first name!\n";
         }
-        if (lastNameField.getText() == null || lastNameField.getText().length() == 0) {
+        if (ApellidosF.getText() == null || ApellidosF.getText().length() == 0) {
             errorMessage += "No valid last name!\n";
         }
-        if (streetField.getText() == null || streetField.getText().length() == 0) {
+        if (CalleF.getText() == null || CalleF.getText().length() == 0) {
             errorMessage += "No valid street!\n";
         }
 
-        if (postalCodeField.getText() == null || postalCodeField.getText().length() == 0) {
+        if (CodPostalF.getText() == null || CodPostalF.getText().length() == 0) {
             errorMessage += "No valid postal code!\n";
         } else {
             // try to parse the postal code into an int.
             try {
-                Integer.parseInt(postalCodeField.getText());
+                Integer.parseInt(CodPostalF.getText());
             } catch (NumberFormatException e) {
                 errorMessage += "No valid postal code (must be an integer)!\n";
             }
         }
 
-        if (cityField.getText() == null || cityField.getText().length() == 0) {
+        if (CiudadF.getText() == null || CiudadF.getText().length() == 0) {
             errorMessage += "No valid city!\n";
         }
 
-        if (birthdayField.getText() == null || birthdayField.getText().length() == 0) {
+        if (CumpleF.getText() == null || CumpleF.getText().length() == 0) {
             errorMessage += "No valid birthday!\n";
         } else {
-            if (!DateUtil.validDate(birthdayField.getText())) {
+            if (!DateUtil.validDate(CumpleF.getText())) {
                 errorMessage += "No valid birthday. Use the format dd.mm.yyyy!\n";
             }
         }
