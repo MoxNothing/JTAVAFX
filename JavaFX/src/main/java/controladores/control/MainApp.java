@@ -3,10 +3,8 @@ package controladores.control;
 import java.io.IOException;
 
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
@@ -39,7 +37,9 @@ public class MainApp extends Application {
         personData.add(new Person("Stefan", "Meier"));
         personData.add(new Person("Martin", "Mueller"));
     }
-
+    public ObservableList<Person> getPersonData() {
+        return personData;
+    }
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -50,9 +50,6 @@ public class MainApp extends Application {
         showPersonOverview();
     }
 
-    /**
-     * Initializes the root layout.
-     */
     public void initRootLayout() {
         try {
             // Load root layout from fxml file.
@@ -145,4 +142,6 @@ public class MainApp extends Application {
             primaryStage.setTitle("AddressApp");
         }
     }
+
+
 }

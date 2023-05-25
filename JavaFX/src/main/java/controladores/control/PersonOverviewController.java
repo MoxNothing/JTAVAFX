@@ -9,7 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
-
+import javafx.scene.control.Alert.AlertType;
 import java.io.IOException;
 
 
@@ -114,24 +114,7 @@ public class PersonOverviewController {
             mainApp.getPersonData().add(tempPerson);
         }
     }
-    public void showPersonOverview() {
-        try {
-            // Load person overview.
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("view/PersonOverview.fxml"));
-            AnchorPane personOverview = (AnchorPane) loader.load();
 
-            // Set person overview into the center of root layout.
-            rootLayout.setCenter(personOverview);
-
-            // Give the controller access to the main app.
-            PersonOverviewController controller = loader.getController();
-            controller.setMainApp(this);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     @FXML
     private void handleEditPerson() {
         Person selectedPerson = personTable.getSelectionModel().getSelectedItem();
@@ -152,10 +135,5 @@ public class PersonOverviewController {
             alert.showAndWait();
         }
     }
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
 
-        // Add observable list data to the table
-        personTable.setItems(mainApp.getPersonData());
-    }
 }
