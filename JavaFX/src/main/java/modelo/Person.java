@@ -101,7 +101,11 @@ public class Person {
     }
 
     public LocalDate getBirthday() {
-        return Cumple.get();
+       // return Cumple.get();
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        public LocalDate getBirthday() {
+            return birthday.get();
+        }
     }
 
     public void setBirthday(LocalDate birthday) {
@@ -111,4 +115,6 @@ public class Person {
     public ObjectProperty<LocalDate> birthdayProperty() {
         return Cumple;
     }
+
+
 }
